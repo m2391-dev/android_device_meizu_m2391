@@ -1,0 +1,7 @@
+# System_ext partition proprietary files for m2391.
+#
+# Use this file for non-vendor blobs required by vendor services or features.
+# Re-run extract-files.py with --regenerate_makefiles after updates.
+#
+# Example:
+# system_ext/lib64/libexample.so

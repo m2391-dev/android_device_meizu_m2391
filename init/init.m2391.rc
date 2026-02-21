@@ -1,0 +1,7 @@
+# Minimal device-specific init hooks for bring-up debugging.
+
+on post-fs-data
+    setprop vendor.m2391.bringup 1
+
+on property:sys.boot_completed=1
+    setprop vendor.m2391.boot_completed 1

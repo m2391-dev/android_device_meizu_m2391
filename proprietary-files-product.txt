@@ -1,0 +1,7 @@
+# Product partition proprietary files for m2391.
+#
+# Keep this list scoped to blobs that are truly required from product/.
+# Start small and expand with conflict checks against Soong installs.
+#
+# Example:
+# product/lib64/libexample.so

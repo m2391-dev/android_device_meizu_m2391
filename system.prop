@@ -1,0 +1,3 @@
+# Keep product identity aligned with stock naming for app compatibility.
+ro.product.system.device=meizu20Pro
+ro.product.system.name=meizu_20Pro_CN

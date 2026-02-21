@@ -1,0 +1,48 @@
+# Copyright (c) 2017-2018,2020-2021 The Linux Foundation. All rights reserved.
+#
+# Recovery-only qcom hooks required for USB gadget bring-up on m2391.
+
+on init
+    # This device exposes gadget through configfs in recovery.
+    setprop sys.usb.configfs 1
+
+on property:ro.boot.usbcontroller=*
+    setprop sys.usb.controller ${ro.boot.usbcontroller}
+    wait /sys/bus/platform/devices/${ro.boot.usb.dwc3_msm:-a600000.ssusb}/mode
+    write /sys/bus/platform/devices/${ro.boot.usb.dwc3_msm:-a600000.ssusb}/mode peripheral
+    wait /sys/class/udc/${ro.boot.usbcontroller} 1
+
+on fs
+    wait /dev/block/platform/soc/${ro.boot.bootdevice}
+    symlink /dev/block/platform/soc/${ro.boot.bootdevice} /dev/block/bootdevice
+
+on m2391-recovery-metadata-bootstrap
+    wait /dev/block/by-name/metadata
+    mount f2fs /dev/block/by-name/metadata /metadata noatime nosuid nodev discard fsync_mode=strict
+
+    # Align with AOSP metadata layout needed by OTA/snapshot flows.
+    restorecon_recursive /metadata
+    mkdir /metadata/vold
+    chmod 0700 /metadata/vold
+    mkdir /metadata/password_slots 0771 root system
+    mkdir /metadata/bootstat 0750 system log
+    mkdir /metadata/ota 0750 root system
+    mkdir /metadata/ota/snapshots 0750 root system
+    mkdir /metadata/apex 0700 root system
+    mkdir /metadata/apex/sessions 0700 root system
+    mkdir /metadata/apex/images 0700 root system
+    mkdir /metadata/apex/config 0700 root system
+    restorecon_recursive /metadata/ota
+    restorecon_recursive /metadata/apex
+
+on post-fs-data
+    trigger m2391-recovery-metadata-bootstrap
+
+on property:sys.usb.config=sideload
+    # Wipe-data flow reformats /metadata in the same recovery session; rebuild
+    # metadata layout before install starts.
+    trigger m2391-recovery-metadata-bootstrap
+
+on property:sys.usb.state=sideload
+    # Ensure directory layout also exists after sideload state is fully active.
+    trigger m2391-recovery-metadata-bootstrap

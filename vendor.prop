@@ -1,0 +1,7 @@
+# Vendor API and board-level compatibility properties aligned to stock Android 13 vendor baseline.
+# Keep first API level at 33, but avoid overriding generated Android platform release/sdk.
+ro.vendor.build.security_patch=2023-10-01
+ro.product.first_api_level=33
+ro.board.first_api_level=33
+ro.board.api_level=33
+ro.board.platform=kalama

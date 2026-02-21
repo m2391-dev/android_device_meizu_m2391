@@ -1,0 +1,7 @@
+# ODM partition proprietary files for m2391.
+#
+# Keep only device-specific ODM userspace components in this file.
+# Avoid adding entries that are already provided by source modules.
+#
+# Example:
+# odm/lib64/libexample.so
